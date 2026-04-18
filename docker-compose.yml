@@ -1,0 +1,42 @@
+services:
+  voice-gateway:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    ports:
+      - "8100:8100"
+    environment:
+      STT_MODEL_SIZE: "large-v3"
+      STT_DEVICE: "cuda"
+      STT_COMPUTE_TYPE: "float16"
+      STT_LANGUAGE: "pl"
+      PIPER_BINARY: "/usr/local/bin/piper"
+      PIPER_MODEL: "/models/tts/pl_PL-darkman-medium.onnx"
+      PIPER_SPEAKER: "0"
+      TTS_SAMPLE_RATE: "22050"
+      AGENT_TIMEOUT: "120"
+      LOG_LEVEL: "INFO"
+      # AGENTS_CONFIG: '{"gacek": {"url": "http://gacek:8000/api/invoke", "description": "Asystent ogólny"}}'
+    volumes:
+      - ./models/stt:/models/stt
+      - ./models/tts:/models/tts
+    deploy:
+      resources:
+        reservations:
+          devices:
+            - driver: nvidia
+              count: 1
+              capabilities: [gpu]
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8100/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 60s
+    networks:
+      - ai-network
+    restart: unless-stopped
+
+networks:
+  ai-network:
+    external: true

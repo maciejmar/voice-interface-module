@@ -1,0 +1,57 @@
+# Models (large binary files, mounted as volumes)
+models/stt/
+models/tts/
+
+# Python
+__pycache__/
+*.py[cod]
+*.pyo
+*.pyd
+.Python
+*.egg-info/
+dist/
+build/
+.eggs/
+*.egg
+.venv/
+venv/
+env/
+
+# Poetry
+poetry.lock
+.poetry/
+
+# Environment variables
+.env
+.env.*
+!.env.example
+
+# Temp audio files
+*.wav
+*.mp3
+*.ogg
+*.webm
+/tmp/
+
+# Docker
+.dockerignore
+
+# IDE
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Logs
+*.log
+logs/
+
+# pytest / coverage
+.pytest_cache/
+.coverage
+htmlcov/

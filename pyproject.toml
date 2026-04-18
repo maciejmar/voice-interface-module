@@ -1,0 +1,19 @@
+[tool.poetry]
+name = "voice-gateway"
+version = "0.1.0"
+description = "Reusable voice gateway module for AI agents"
+authors = []
+package-mode = false
+
+[tool.poetry.dependencies]
+python = "^3.11"
+fastapi = "*"
+uvicorn = {extras = ["standard"], version = "*"}
+faster-whisper = "*"
+httpx = "*"
+python-multipart = "*"
+pydantic = "*"
+
+[build-system]
+requires = ["poetry-core"]
+build-backend = "poetry.core.masonry.api"
