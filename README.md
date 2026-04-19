@@ -231,6 +231,45 @@ Sekwencja wiadomości od serwera:
 
 ---
 
+## Wymagania dla agenta AI
+
+Aby agent mógł korzystać z Voice Gateway, musi spełniać poniższe wymagania.
+
+### Transport
+- Dostępny w sieci Docker `ai-network`
+- Nasłuchuje na dowolnym porcie TCP
+
+### Endpoint
+- `POST /api/invoke` (lub inny URL zarejestrowany w `AGENTS_CONFIG`)
+- Akceptuje `Content-Type: application/json`
+
+### Format zapytania
+```json
+{"query": "tekst pytania użytkownika"}
+```
+
+### Format odpowiedzi
+- Status HTTP `200`
+- `Content-Type: application/json`
+- Odpowiedź pod jednym z kluczy (Voice Gateway sprawdza w tej kolejności):
+
+```json
+{"answer": "..."}
+{"response": "..."}
+{"output": "..."}
+{"result": "..."}
+{"content": "..."}
+{"message": "..."}
+{"text": "..."}
+```
+
+Wartość może być stringiem lub obiektem z pod-kluczem `text`, `content`, `answer` lub `message`.
+
+### Timeout
+- Agent musi odpowiedzieć w ciągu **120 sekund** (konfigurowalny przez `AGENT_TIMEOUT`)
+
+---
+
 ## Podłączenie nowego agenta
 
 Edytuj zmienną `AGENTS_CONFIG` w `docker-compose.yml`:

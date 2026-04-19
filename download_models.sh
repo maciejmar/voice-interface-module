@@ -16,12 +16,12 @@ download_piper_voice() {
     local lang_path="$1"
     local filename="$2"
     echo "  -> $filename"
-    wget -q --show-progress \
+    curl -L --progress-bar \
         "$HF_PIPER/$lang_path/$filename" \
-        -O "$TTS_DIR/$filename"
-    wget -q --show-progress \
+        -o "$TTS_DIR/$filename"
+    curl -L --progress-bar \
         "$HF_PIPER/$lang_path/$filename.json" \
-        -O "$TTS_DIR/$filename.json"
+        -o "$TTS_DIR/$filename.json"
 }
 
 download_piper_voice "pl/pl_PL/darkman/medium" "pl_PL-darkman-medium.onnx"
@@ -34,25 +34,21 @@ echo ""
 # Method 1: huggingface-cli (preferred)
 if command -v huggingface-cli &>/dev/null; then
     echo "Using huggingface-cli..."
-    huggingface-cli download Systran/faster-whisper-large-v3 \
-        --local-dir "$STT_DIR" \
-        --local-dir-use-symlinks False
+    PYTHONIOENCODING=utf-8 huggingface-cli download Systran/faster-whisper-large-v3 \
+        --local-dir "$STT_DIR"
+elif command -v hf &>/dev/null; then
+    echo "Using hf..."
+    PYTHONIOENCODING=utf-8 hf download Systran/faster-whisper-large-v3 \
+        --local-dir "$STT_DIR"
 else
-    echo "huggingface-cli not found — trying pip install..."
-    pip install -q huggingface_hub 2>/dev/null && \
-    huggingface-cli download Systran/faster-whisper-large-v3 \
-        --local-dir "$STT_DIR" \
-        --local-dir-use-symlinks False || {
-
-        echo ""
-        echo "Automatic download failed. Manual steps:"
-        echo "  1. pip install huggingface_hub"
-        echo "  2. huggingface-cli download Systran/faster-whisper-large-v3 \\"
-        echo "       --local-dir $STT_DIR --local-dir-use-symlinks False"
-        echo "  OR visit: https://huggingface.co/Systran/faster-whisper-large-v3"
-        echo "  and manually download all files into: $STT_DIR"
-        exit 1
-    }
+    echo ""
+    echo "huggingface-cli not found. Manual steps:"
+    echo "  1. pip install huggingface_hub"
+    echo "  2. PYTHONIOENCODING=utf-8 huggingface-cli download Systran/faster-whisper-large-v3 \\"
+    echo "       --local-dir $STT_DIR"
+    echo "  OR visit: https://huggingface.co/Systran/faster-whisper-large-v3"
+    echo "  and manually download all files into: $STT_DIR"
+    exit 1
 fi
 
 echo ""
